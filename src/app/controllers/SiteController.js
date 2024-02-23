@@ -1,5 +1,5 @@
 const Students = require("../models/Students");
-// const { sequelizeToObject } = require("../../util/sequelize");
+const { sequelizeToObject } = require("../../util/sequelize");
 class SiteController {
   // [GET] /
   index(req, res, next) {
@@ -10,7 +10,7 @@ class SiteController {
     Students.findOne({ where: { courseId: req.body.courseId, msv: req.body.msv }})
         .then((student) => {
             if(student) {
-              res.json({ student: student.get({ plain: true }) });
+              res.json({ student: sequelizeToObject(student) });
             }else{
               res.json({ student: null });
             }
