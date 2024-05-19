@@ -1,0 +1,97 @@
+<div class="mt-4">
+    <h2>Tra cứu điểm của sinh viên:</h2>
+
+    <div class="form-group row">
+        <label for="msv" class="col-sm-2 col-form-label">Nhập mã sinh viên:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="msv" id="msv">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="courseId" class="col-sm-2 col-form-label">Nhập mã môn học:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="courseId" id="courseId">
+        </div>
+    </div>
+
+    <button onclick="searchStudent()" class="btn btn-primary mb-2">Tra cứu</button>
+
+    <div id="searchResult">
+
+    </div>
+</div>
+
+<script>
+    function searchStudent() {
+        var courseId = document.getElementById('courseId').value;
+        var msv = document.getElementById('msv').value;
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                var resultDiv = document.getElementById('searchResult');
+                if (response.student !== null) {
+                    resultDiv.innerHTML = `
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Tên</th>
+                                <th scope="col">Mã sinh viên</th>
+                                <th scope="col">Mã môn học</th>
+                                <th scope="col">Tên môn học</th>
+                                <th scope="col">Điểm TK</th>
+                                <th scope="col">Điểm GK</th>
+                                <th scope="col">Điểm CK</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>${response.student.name}</td>
+                                <td>${response.student.msv}</td>
+                                <td>${response.student.courseId}</td>
+                                <td>${response.student.courseName}</td>
+                                <td>${response.student.tk}</td>
+                                <td>${response.student.gk}</td>
+                                <td>${response.student.ck}</td>
+                            </tr>
+                        </tbody>
+                    </table>`;
+
+                }else{
+                    resultDiv.innerHTML = `
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Tên</th>
+                                <th scope="col">Mã sinh viên</th>
+                                <th scope="col">Mã môn học</th>
+                                <th scope="col">Tên môn học</th>
+                                <th scope="col">Điểm TK</th>
+                                <th scope="col">Điểm GK</th>
+                                <th scope="col">Điểm CK</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row" class="text-center" colspan="8">Không có dữ liệu!</th>
+                                
+                            </tr>
+                        </tbody>
+                    </table>`;
+                }
+            } else {
+                console.error(xhr.statusText);
+            }
+        };
+        xhr.onerror = function () {
+            console.error('Request failed');
+        };
+        xhr.send(JSON.stringify({ courseId: courseId, msv: msv }));
+    }
+</script>
